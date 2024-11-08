@@ -1,49 +1,29 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
-func TestTotalValue(t *testing.T) {
+func TestCountDivisors(t *testing.T) {
 	tests := []struct {
-		product  Product
-		expected float64
+		input    int
+		expected int
 	}{
-		{Product{Name: "Смартфон", Price: 15000.0, Quantity: 5}, 75000.0},
-		{Product{Name: "Ноутбук", Price: 30000.0, Quantity: 3}, 90000.0},
-		{Product{Name: "Мишка", Price: 500.0, Quantity: 10}, 5000.0},
-		{Product{Name: "Клавіатура", Price: 1200.0, Quantity: 7}, 8400.0},
+		{input: 1, expected: 1},  // 1 має тільки один дільник: 1
+		{input: 6, expected: 4},  // 6 має дільники: 1, 2, 3, 6
+		{input: 10, expected: 4}, // 10 має дільники: 1, 2, 5, 10
+		{input: 15, expected: 4}, // 15 має дільники: 1, 3, 5, 15
+		{input: 28, expected: 6}, // 28 має дільники: 1, 2, 4, 7, 14, 28
+		{input: 13, expected: 2}, // 13 є простим числом, має тільки дільники: 1, 13
 	}
 
 	for _, test := range tests {
-		t.Run(test.product.Name, func(t *testing.T) {
-			result := test.product.TotalValue()
+		t.Run(fmt.Sprintf("input=%d", test.input), func(t *testing.T) {
+			result := countDivisors(test.input)
 			if result != test.expected {
-				t.Errorf("Для продукту %s очікувана вартість %.2f, але отримано %.2f", test.product.Name, test.expected, result)
+				t.Errorf("expected %d divisors for %d, got %d", test.expected, test.input, result)
 			}
 		})
-	}
-}
-
-func TestTotalInventoryValue(t *testing.T) {
-	// Створюємо масив продуктів
-	products := []Product{
-		{Name: "Смартфон", Price: 15000.0, Quantity: 5},
-		{Name: "Ноутбук", Price: 30000.0, Quantity: 3},
-		{Name: "Мишка", Price: 500.0, Quantity: 10},
-		{Name: "Клавіатура", Price: 1200.0, Quantity: 7},
-	}
-
-	var totalInventoryValue float64
-	// Цикл для підрахунку загальної вартості
-	for _, product := range products {
-		totalInventoryValue += product.TotalValue()
-	}
-
-	expectedTotalValue := 75000.0 + 90000.0 + 5000.0 + 8400.0
-
-	// Перевіряємо, чи загальна вартість правильна
-	if totalInventoryValue != expectedTotalValue {
-		t.Errorf("Очікувана загальна вартість %.2f, але отримано %.2f", expectedTotalValue, totalInventoryValue)
 	}
 }
